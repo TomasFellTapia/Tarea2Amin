@@ -1,2 +1,3 @@
-# Tarea2Amin
-Tomás Fell Tarea 2 AMIN 
+# Tarea 2 Amin
+## Tomás Alejandro Fell Tapia
+### Algoritmo vendedor Viajero
