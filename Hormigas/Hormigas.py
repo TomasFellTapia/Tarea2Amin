@@ -2,14 +2,15 @@ import sys
 import numpy as np # type: ignore
 import pandas as pd # type: ignore
 def leerdatos(archivo):
-    df = pd.read_table(archivo, header=None, delim_whitespace=True,skiprows=6, skipfooter=1)
+    df = pd.read_table(archivo, header=None, sep='\\s+', skiprows=6, skipfooter=1, engine='python')
     ndf= df.drop(columns=0, axis=1).to_numpy()
     return ndf
 def calcdist(datos):
-   mat = np.zeros((datos.len,datos.len),float)
-    for i in range(datos.len):
-        for j in range(i+1,datos.len):
-            mat[i][j]= np.sqrt((datos[i][0]-datos[j][0]**2)+(datos[i][0]-datos[j][0]**2))
+    mat = np.zeros((len(datos),len(datos)),float)
+    for i in range(len(datos)):
+        for j in range(i+1,len(datos)):
+            mat[i][j] = mat[j][i] = np.sqrt((datos[i][0] - datos[j][0])**2 + (datos[i][1] - datos[j][1])**2)
+    return mat
 
 
 if len(sys.argv)== 8:
@@ -25,7 +26,7 @@ if len(sys.argv)== 8:
     
     cordenadas=leerdatos(nom)
     matdist = calcdist(cordenadas)
-
+    print(matdist)
 
    
 else :
