@@ -11,6 +11,13 @@ def calcdist(datos):
         for j in range(i+1,len(datos)):
             mat[i][j] = mat[j][i] = np.sqrt((datos[i][0] - datos[j][0])**2 + (datos[i][1] - datos[j][1])**2)
     return mat
+def mathuristica(mat,lar):
+    heu = np.zeros((lar,lar),float)
+    for n in range(lar):
+        for m in range(n+1,lar):
+            heu[n][m] = heu[m][n] = 1/mat[n][m]
+            
+    return heu
 
 
 if len(sys.argv)== 8:
@@ -23,10 +30,13 @@ if len(sys.argv)== 8:
     bet = float(sys.argv[7])
     print(sem, nom,colonia,q0,ite,alf,bet)
     nom="./Datos/"+nom+".tsp.txt"
-    
+    np.random.seed(sem)
     cordenadas=leerdatos(nom)
     matdist = calcdist(cordenadas)
-    print(matdist)
+    matheu = mathuristica(matdist,len(cordenadas))
+    rep=0
+    while rep<ite:
+        for 
 
    
 else :
