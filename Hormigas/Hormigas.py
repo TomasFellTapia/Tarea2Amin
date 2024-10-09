@@ -11,13 +11,13 @@ def calcdist(datos):
         for j in range(i+1,len(datos)):
             mat[i][j] = mat[j][i] = np.sqrt((datos[i][0] - datos[j][0])**2 + (datos[i][1] - datos[j][1])**2)
     return mat
-def mathuristica(mat,lar):
-    heu = np.zeros((lar,lar),float)
-    for n in range(lar):
-        for m in range(n+1,lar):
-            heu[n][m] = heu[m][n] = 1/mat[n][m]
+def mathuristica(mat):
+    heu = np.full_like(mat,fill_value=1/mat,dtype=float)
+    np.fill_diagonal(heu,0)
             
     return heu
+def pathfinder():
+
 
 
 if len(sys.argv)== 8:
@@ -33,11 +33,18 @@ if len(sys.argv)== 8:
     np.random.seed(sem)
     cordenadas=leerdatos(nom)
     matdist = calcdist(cordenadas)
-    matheu = mathuristica(matdist,len(cordenadas))
+    matheu = mathuristica(matdist)
     rep=0
+    hormi = np.zeros((colonia,len(cordenadas)),int)
     while rep<ite:
-        for 
+        for i in range (colonia):
+            hormi[i][0]= np.random.randint(len(cordenadas))
+        for k in range(len(cordenadas)):
+           for l in range(colonia):
+                
 
+        rep +=1
+    print(matheu)
    
 else :
     print("Error entrada de los parametros")
