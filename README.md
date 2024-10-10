@@ -1,3 +1,5 @@
 # Tarea 2 Amin
-## Tomás Alejandro Fell Tapia
-### Algoritmo vendedor Viajero
+## Algoritmo Colonia de Hormigas 
+### Tomás Alejandro Fell Tapia
+
+El problema del vendedor viajero consiste en minimisar los costos para visitar una cierta cantidad de nodos 
