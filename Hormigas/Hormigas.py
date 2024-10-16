@@ -1,6 +1,7 @@
 import sys
 import numpy as np # type: ignore
 import pandas as pd # type: ignore
+import gc
 def leerdatos(archivo):
     df = pd.read_table(archivo, header=None, sep='\\s+', skiprows=6, skipfooter=1, engine='python')
     ndf= df.drop(columns=0, axis=1).to_numpy()
@@ -28,6 +29,14 @@ def calccost (dist,solin):
     sum=sum+dist[c][d]
     return sum
 
+def prox_nodo(mfer,mheu,i,mmem,beta,q0,n):
+    r=np.random.rand()
+    veop = np.zeros(n,int)
+    if r<=q0:
+        for j in range:
+            veop[j] = mfer[i][j]*((mheu[i][j])**beta)*mmem[i][j]
+        aux=
+        
 
 
         
@@ -38,7 +47,7 @@ if len(sys.argv)== 8:
     sem = int(sys.argv[1])
     nom = str(sys.argv[2])
     colonia = int(sys.argv[3])
-    q0 = int(sys.argv[4])
+    q0 = float(sys.argv[4])
     ite = int(sys.argv[5])
     alf = float(sys.argv[6])
     bet = float(sys.argv[7])
@@ -51,21 +60,32 @@ if len(sys.argv)== 8:
     matdist = calcdist(cordenadas)
     matheu = mathuristica(matdist)
     rep=0
-    hormi = np.full((colonia,n),fill_value=-1)
     soli = np.arange(0,n)
     np.random.shuffle(soli)
+    valfer=1/(n*calccost(matdist,soli))
+    matfer = np.full((n,n),fill_value=valfer)
+    np.fill_diagonal(matfer,0)
+  
+    soloptd =pd.read_table(optdas, header=None, sep='\\s+', skiprows=4, skipfooter=2, engine='python').transpose().to_numpy() -1
+    solot = np.ravel(soloptd,order='F')
+    delta=1/calccost(matdist,solot)
+
     while rep<ite:
+        hormi = np.full((colonia,n),fill_value=-1)
+        matmem= np.ones((colonia,n),int)
+        
         for i in range (colonia):
             hormi[i][0]= np.random.randint(n)
-    
-                
+            matmem[i][hormi[i][0]]=0
+            
+            
+
+        
 
         rep +=1
     
-    soloptd =pd.read_table(optdas, header=None, sep='\\s+', skiprows=4, skipfooter=2, engine='python').transpose().to_numpy() -1
-    solot = np.ravel(soloptd,order='F')
+   
     
-    print(calccost(matdist,solot))
    
    
 else :
