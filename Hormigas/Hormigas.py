@@ -14,6 +14,7 @@ def calcdist(datos):
             mat[i][j] = mat[j][i] = np.sqrt((datos[i][0] - datos[j][0])**2 + (datos[i][1] - datos[j][1])**2)
     return mat
 def mathuristica(mat):
+    np.fill_diagonal(mat,1)
     heu = np.full_like(mat,fill_value=1/mat,dtype=float)
     np.fill_diagonal(heu,0)
     return heu
@@ -30,12 +31,30 @@ def calccost (dist,solin):
     return sum
 
 def prox_nodo(mfer,mheu,i,mmem,beta,q0,n):
-    r=np.random.rand()
-    veop = np.zeros(n,int)
-    if r<=q0:
-        for j in range:
+    r1=np.random.rand()
+    veop = np.zeros(n,float)
+    if r1<=q0:
+        for j in range (n):
             veop[j] = mfer[i][j]*((mheu[i][j])**beta)*mmem[i][j]
-        aux=
+        print(veop)
+        auxi= veop.argmax()
+       
+    else: 
+        for j in range (n):
+            veop[j] = mfer[i][j]*((mheu[i][j])**beta)*mmem[i][j]
+      
+       
+        veopa = np.cumsum(veop/veop.sum())
+        
+        r2=np.random.rand()
+        for k in range (n):
+            auxi = 0
+            if r2<veopa[k]:
+                auxi = k
+                break
+        
+    return auxi
+
         
 
 
@@ -59,7 +78,7 @@ if len(sys.argv)== 8:
     n=len(cordenadas)
     matdist = calcdist(cordenadas)
     matheu = mathuristica(matdist)
-    rep=0
+    
     soli = np.arange(0,n)
     np.random.shuffle(soli)
     valfer=1/(n*calccost(matdist,soli))
@@ -70,21 +89,24 @@ if len(sys.argv)== 8:
     solot = np.ravel(soloptd,order='F')
     delta=1/calccost(matdist,solot)
 
-    while rep<ite:
+    for rep in range (ite) :
         hormi = np.full((colonia,n),fill_value=-1)
         matmem= np.ones((colonia,n),int)
         
         for i in range (colonia):
             hormi[i][0]= np.random.randint(n)
             matmem[i][hormi[i][0]]=0
-            
+        for i in range (colonia):
+            for j in range (1,n):
+                
+                hormi[i][j] = prox_nodo(matfer,matheu,hormi[i][j-1],matmem,bet,q0,n)
+                matmem[i][hormi[i][j]]=0
             
 
         
 
-        rep +=1
-    
-   
+        
+    print(hormi)
     
    
    
