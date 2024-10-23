@@ -43,8 +43,8 @@ def prox_nodo(mfer,mheu,i,mmem,beta,q0,n):
         for j in range (n):
             veop[j] = mfer[i][j]*((mheu[i][j])**beta)*mmem[i][j]
       
-        print(veop)
-        veopa = np.cumsum(veop/veop.sum())
+        mask = veop != 0
+        veopa = np.cumsum(veop[mask]/veop[mask].sum())
         
         r2=np.random.rand()
         for k in range (n):
@@ -109,7 +109,7 @@ if len(sys.argv)== 8:
     for z in range (colonia):
         vectcost[z]=calccost(matdist,hormi[z])
     minlocal = np.min(vectcost)
-
+    
         
 
         
