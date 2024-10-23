@@ -36,19 +36,19 @@ def prox_nodo(mfer,mheu,i,mmem,beta,q0,n):
     if r1<=q0:
         for j in range (n):
             veop[j] = mfer[i][j]*((mheu[i][j])**beta)*mmem[i][j]
-        print(veop)
+        
         auxi= veop.argmax()
        
     else: 
         for j in range (n):
             veop[j] = mfer[i][j]*((mheu[i][j])**beta)*mmem[i][j]
       
-       
+        print(veop)
         veopa = np.cumsum(veop/veop.sum())
         
         r2=np.random.rand()
         for k in range (n):
-            auxi = 0
+           
             if r2<veopa[k]:
                 auxi = k
                 break
@@ -81,32 +81,39 @@ if len(sys.argv)== 8:
     
     soli = np.arange(0,n)
     np.random.shuffle(soli)
-    valfer=1/(n*calccost(matdist,soli))
+    cosoli = calccost(matdist,soli)
+    valfer=1/(n*cosoli)
     matfer = np.full((n,n),fill_value=valfer)
+    
     np.fill_diagonal(matfer,0)
-  
+   
     soloptd =pd.read_table(optdas, header=None, sep='\\s+', skiprows=4, skipfooter=2, engine='python').transpose().to_numpy() -1
     solot = np.ravel(soloptd,order='F')
     delta=1/calccost(matdist,solot)
 
     for rep in range (ite) :
+        
         hormi = np.full((colonia,n),fill_value=-1)
         matmem= np.ones((colonia,n),int)
         
         for i in range (colonia):
             hormi[i][0]= np.random.randint(n)
             matmem[i][hormi[i][0]]=0
-        for i in range (colonia):
-            for j in range (1,n):
-                
-                hormi[i][j] = prox_nodo(matfer,matheu,hormi[i][j-1],matmem,bet,q0,n)
-                matmem[i][hormi[i][j]]=0
-            
+        for j in range (1,n):
+            for k in range (colonia):
+                hormi[k][j] = prox_nodo(matfer,matheu,k,matmem,bet,q0,n)
+                matmem[k][hormi[k][j]]=0
+                matfer[hormi[k][j-1]][hormi[k][j]] = matfer[hormi[k][j]][hormi[k][j-1]] = (1-alf)*matfer[hormi[k][j-1]][hormi[k][j]] + valfer*alf
+        
+    vectcost = np.zeros(colonia,float)
+    for z in range (colonia):
+        vectcost[z]=calccost(matdist,hormi[z])
+    minlocal = np.min(vectcost)
 
         
 
         
-    print(hormi)
+    print(minlocal)
     
    
    
