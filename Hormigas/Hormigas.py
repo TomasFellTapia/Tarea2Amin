@@ -30,30 +30,40 @@ def calccost (dist,solin):
     sum=sum+dist[c][d]
     return sum
 
-def prox_nodo(mfer,mheu,i,mmem,beta,q0,n):
+def prox_nodo(mfer,mheu,i,mmem,beta,q0,n,hormi):
     r1=np.random.rand()
-    veop = np.zeros(n,float)
-    if r1<=q0:
-        for j in range (n):
+    
+    veop = np.ones(n,float)
+    
+    for j in range (n):
             veop[j] = mfer[i][j]*((mheu[i][j])**beta)*mmem[i][j]
-        
-        auxi= veop.argmax()
+
+    
+    if r1<=q0:
+     
+        auxi=np.random.choice(np.where(veop ==veop.max())[0])
+        return auxi
        
     else: 
-        for j in range (n):
-            veop[j] = mfer[i][j]*((mheu[i][j])**beta)*mmem[i][j]
-      
-        mask = veop != 0
-        veopa = np.cumsum(veop[mask]/veop[mask].sum())
-        
-        r2=np.random.rand()
-        for k in range (n):
-           
-            if r2<veopa[k]:
-                auxi = k
-                break
-        
-    return auxi
+        total = veop.sum() 
+        if total !=0:
+       
+            veopa = np.cumsum(veop/total)
+                
+            r2=np.random.rand()
+            
+            for k in range (n):
+                if r2 <= veopa[k]:
+                    auxi = k
+                    return auxi
+        else:
+            for w in range (n):
+                if w not in hormi:
+                    return w
+
+       
+            
+    
 
         
 
@@ -82,6 +92,8 @@ if len(sys.argv)== 8:
     soli = np.arange(0,n)
     np.random.shuffle(soli)
     cosoli = calccost(matdist,soli)
+    mejorhormi = cosoli.copy()
+    mejsol = cosoli
     valfer=1/(n*cosoli)
     matfer = np.full((n,n),fill_value=valfer)
     
@@ -101,19 +113,33 @@ if len(sys.argv)== 8:
             matmem[i][hormi[i][0]]=0
         for j in range (1,n):
             for k in range (colonia):
-                hormi[k][j] = prox_nodo(matfer,matheu,k,matmem,bet,q0,n)
+                hormi[k][j] = prox_nodo(matfer,matheu,k,matmem,bet,q0,n,hormi[k])
                 matmem[k][hormi[k][j]]=0
+               
                 matfer[hormi[k][j-1]][hormi[k][j]] = matfer[hormi[k][j]][hormi[k][j-1]] = (1-alf)*matfer[hormi[k][j-1]][hormi[k][j]] + valfer*alf
         
-    vectcost = np.zeros(colonia,float)
-    for z in range (colonia):
-        vectcost[z]=calccost(matdist,hormi[z])
-    minlocal = np.min(vectcost)
+        vectcost = np.zeros(colonia,float)
+        for z in range (colonia):
+            vectcost[z]=calccost(matdist,hormi[z])
+        minlocal = np.min(vectcost)
+        if minlocal < mejsol:
+            mejsol = minlocal
+            posi= np.random.choice(np.where(vectcost ==vectcost.min())[0])
+            mejorhormi== hormi[posi].copy()
+            gen= rep + 1
+            for u in range (n-1):
+                for j in range(i+1,n):
+                    matfer[i][j] = (1-alf)*matfer[i][j]
+                    matfer[j][1] = matfer[i][j]
+            
+
+
+   
     
         
 
         
-    print(minlocal)
+    
     
    
    
