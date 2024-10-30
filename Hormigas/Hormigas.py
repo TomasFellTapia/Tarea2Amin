@@ -91,20 +91,21 @@ if len(sys.argv)== 8:
     soli = np.arange(0,n)
     np.random.shuffle(soli)
     cosoli = calccost(matdist,soli)
-    mejorhormi = cosoli.copy()
+    mejorhormi = soli.copy()
     mejsol = cosoli
     valfer=1/(n*cosoli)
     matfer = np.full((n,n),fill_value=valfer)
     np.fill_diagonal(matfer,0)
     soloptd =pd.read_table(optdas, header=None, sep='\\s+', skiprows=4, skipfooter=2, engine='python').transpose().to_numpy() -1
     solot = np.ravel(soloptd,order='F')
-    delta=1/calccost(matdist,solot)
+    csolot = calccost(matdist,solot)
+    delta=1/csolot
 
     for rep in range (ite) :
         
         hormi = np.full((colonia,n),fill_value=-1)
         matmem= np.ones((colonia,n),int)
-        
+        solenc = False
         for i in range (colonia):
             hormi[i][0]= np.random.randint(n)
             matmem[i][hormi[i][0]]=0
@@ -127,8 +128,26 @@ if len(sys.argv)== 8:
             for u in range (n-1):
                 for j in range(i+1,n):
                     matfer[i][j] = (1-alf)*matfer[i][j]
-                    matfer[j][1] = matfer[i][j]
+                    matfer[j][i] = matfer[i][j]
+            c = mejorhormi[0]
+            d = mejorhormi[n-1]
+            for u in range (n-1):
+                a = mejothormi[u]
+                b = mejorhormi[u+1]
+                matfer[a][b] = matfer[a][b] + alf*calccost(matdist,mejorhormi)
+                matfer[b][a] = matfer[a][b]
+            matfer[d][c] = matfer[d][c] + alf*calccost(matdist,mejorhormi)
+            matfer[c][d] = matfer[d][c]
+        if mejsol == csolot :
+            solenc = True
+            break
+    if solenc == True:
+        print("Se encontro una solucion en la generacion ",gen," esta es:")
+        print(mejorhormi)
+    else:
+        print("Lamentablemente no se pudo encontrar una solucion con los datos entregasos.")
             
+                        
 
 
    
