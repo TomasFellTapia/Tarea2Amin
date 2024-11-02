@@ -100,12 +100,12 @@ if len(sys.argv)== 8:
     solot = np.ravel(soloptd,order='F')
     csolot = calccost(matdist,solot)
     delta=1/csolot
-
+    solenc = False
     for rep in range (ite) :
         
         hormi = np.full((colonia,n),fill_value=-1)
         matmem= np.ones((colonia,n),int)
-        solenc = False
+        
         for i in range (colonia):
             hormi[i][0]= np.random.randint(n)
             matmem[i][hormi[i][0]]=0
